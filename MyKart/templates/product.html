@@ -409,6 +409,18 @@ background-color:lightblue;
     .social-links a:hover{
      color: #ff4321;
     }
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+ul.pagination li {display: inline;}
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
   </style>
 </head>
 
@@ -560,6 +572,29 @@ background-color:lightblue;
     </div>
         </div>
     </div>
+      <div class="h">
+      {% if products.has_other_pages %}
+  <ul class="pagination">
+    <!--{% if products.has_previous %} -->
+      <li><a href="?page={{ users.previous_page_number }}">&laquo;</a></li>
+    <!--{% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}-->
+    {% for i in products.paginator.page_range %}
+      {% if users.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    <!--{% if products.has_next %} -->
+      <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
+   <!-- {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}-->
+  </ul>
+{% endif %}
+      </div>
   </section>
 
 

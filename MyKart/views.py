@@ -91,18 +91,9 @@ def singleproduct(request,id):
     return render(request,'singlepro.html',context)
 global buyquan
 global buyid
-global addre
-global city
-global state
-global country
-global pincode
 def cart(request):
     user = request.session['user']
-    global addre
-    global city
-    global state
-    global country
-    global pincode
+
     c = Cart.objects.filter(customer=user).count()
     if request.method=='POST':
         if 'addtocart' in request.POST:
@@ -111,17 +102,27 @@ def cart(request):
             quantity=request.POST['quant']
             request.session['quan']=quantity
             if request.POST['address']:
-                addre= request.POST['address']
-                city=request.POST['city']
-                state = request.POST['state']
-                country = request.POST['country']
-                pincode = request.POST['pincode']
+                a= request.POST['address']
+                request.session['address']=a
+                c=request.POST['city']
+                request.session['city']=c
+                s= request.POST['state']
+                request.session['state']=s
+                c = request.POST['country']
+                request.session['country'] = c
+                pi = request.POST['pincode']
+                request.session['pincode'] = pi
             else:
-                addre=Customer.objects.get(username=user).address
-                city=Customer.objects.get(username=user).city
-                state=Customer.objects.get(username=user).state
-                country=Customer.objects.get(username=user).country
-                pincode=Customer.objects.get(username=user).pincode
+                a=Customer.objects.get(username=user).address
+                request.session['address'] = a
+                c=Customer.objects.get(username=user).city
+                request.session['city'] = c
+                s=Customer.objects.get(username=user).state
+                request.session['state'] = s
+                c=Customer.objects.get(username=user).country
+                request.session['country'] = c
+                pi=Customer.objects.get(username=user).pincode
+                request.session['pincode'] = pi
             quan= Product.objects.get(id=id).quantity
             if int(quantity)>int(quan):
                 messages.info(request,'OUT OF STOCK!!!')
@@ -162,18 +163,27 @@ def cart(request):
             user = request.session['user']
             if request.POST['address']:
 
-                add =request.POST['address']
-                addre=add
-                city = request.POST['city']
-                state = request.POST['state']
-                country = request.POST['country']
-                pincode = request.POST['pincode']
+                a = request.POST['address']
+                request.session['address'] = a
+                c = request.POST['city']
+                request.session['city'] = c
+                s = request.POST['state']
+                request.session['state'] = s
+                c = request.POST['country']
+                request.session['country'] = c
+                pi = request.POST['pincode']
+                request.session['pincode'] = pi
             else:
-                addre=Customer.objects.get(username=user).address
-                city = Customer.objects.get(username=user).city
-                state = Customer.objects.get(username=user).state
-                country = Customer.objects.get(username=user).country
-                pincode = Customer.objects.get(username=user).pincode
+                a = Customer.objects.get(username=user).address
+                request.session['address'] = a
+                c = Customer.objects.get(username=user).city
+                request.session['city'] = c
+                s = Customer.objects.get(username=user).state
+                request.session['state'] = s
+                c = Customer.objects.get(username=user).country
+                request.session['country'] = c
+                pi = Customer.objects.get(username=user).pincode
+                request.session['pincode'] = pi
             c = Cart.objects.filter(customer=user).count()
             bal = Customer.objects.get(username=user).walletbalance
             global buyid
@@ -190,19 +200,22 @@ def cart(request):
             print(p)
             geolocator = Nominatim(user_agent="Mykart")
             dist=GeoDistance('in')
-            print(pincode)
+            #print(pincode)
             try:
+                pincode=request.session['pincode']
                 distance=dist.query_postal_code(pincode,'201017')
 
                 print("distance is " + str(distance))
             #print("pincode"+str(pincode))
 
-                delcharge = 0.5 * int(distance)
+
                 if distance < 100:
                     deltime = 1
+                    delcharge=20
                 else:
                     deltime = distance / 100
                     deltime = int(deltime)+1
+                    delcharge = 0.5 * int(distance)
             except:
                 messages.info(request, 'Invalid Address!!!')
                 return redirect('singleproduct', id)
@@ -234,23 +247,25 @@ def cart(request):
 def buynow(request):
     use = request.session['user']
     geolocator = Nominatim(user_agent="Mykart")
+    dist = GeoDistance('in')
+    # print(pincode)
+    try:
+        pincode = request.session['pincode']
+        distance = dist.query_postal_code(pincode, '201017')
 
-    loc=geolocator.geocode(city)
-    loc2=geolocator.geocode('Delhi')
-    long1=loc.longitude
-    la1=loc.latitude
-    long2 = loc2.longitude
-    la2 = loc2.latitude
+        print("distance is " + str(distance))
+        # print("pincode"+str(pincode))
 
-    city1=(long1,la1)
-    city2=(long2,la2)
-    distance=geodesic(city1, city2).km
-    delcharge=0.5*distance
-    if distance<100:
-        deltime=1
-    else:
-        deltime=distance/100
-        deltime=int(deltime)
+        if distance < 100:
+            deltime = 1
+            delcharge = 20
+        else:
+            deltime = distance / 100
+            deltime = int(deltime) + 1
+            delcharge = 0.5 * int(distance)
+    except:
+        messages.info(request, 'Invalid Address!!!')
+        return redirect('singleproduct', id)
 
     c = Cart.objects.filter(customer=use).count()
     bal = Customer.objects.get(username=use).walletbalance
@@ -261,18 +276,25 @@ def buynow(request):
         passw = Customer.objects.get(username=use).password
         if pas != passw:
             messages.info(request, 'Wrong password')
-            return render(request, 'payment.html', {'total': amt, 'count': c, 'bal': bal})
+            return render(request, 'payment.html', {'price': int(amt)-int(delcharge), 'count': c,
+                                                   'bal': bal,'total':amt,'delcharge':int(delcharge),'deltime':deltime})
         user = Customer.objects.get(username=use).walletbalance
         if int(amt) > int(user):
             messages.info(request, 'Insufficient balance in wallet')
-            return render(request, 'payment.html', {'total': amt, 'count': c, 'bal': bal})
+            return render(request, 'payment.html', {'price': int(amt)-int(delcharge), 'count': c,
+                                                   'bal': bal,'total':amt,'delcharge':int(delcharge),'deltime':deltime})
         else:
             user = Customer.objects.get(username=use).walletbalance
             new = int(user) - int(amt)
             print(new)
             Customer.objects.filter(username=use).update(walletbalance=new)
+            add=request.session['address']
+            ci=request.session['city']
+            st=request.session['state']
+            co=request.session['country']
+            pi=request.session['pincode']
 
-            delivery=addre+','+city+','+state+','+country+'-'+str(pincode)
+            delivery=add+','+ci+','+st+','+co+'-'+str(pi)
             order = orders(customer=use, quantity=quantity, totalamt=amt,date=date.today(),delivery=delivery)
             order.save()
 
@@ -295,12 +317,14 @@ def payment(request):
         print("distance is " + str(distance))
         # print("pincode"+str(pincode))
 
-        delcharge = 0.5 * int(distance)
+
         if distance < 100:
             deltime = 1
+            delcharge=20
         else:
             deltime = distance / 100
             deltime = int(deltime) + 1
+            delcharge = 0.5 * int(distance)
     except:
         messages.info(request, 'Selected Address is Invalid , '
                                'We do not deliver to this address!!!')
@@ -345,8 +369,13 @@ def pay(request):
             for i in range(0,len(p)):
                 ord=Cart.objects.get(id=p[i])
                 print(ord)
+                add = request.session['address']
+                ci = request.session['city']
+                st = request.session['state']
+                co = request.session['country']
+                pi = request.session['pincode']
 
-                delivery = addre + ',' + city + ',' + state + ',' + country + '-' + str(pincode)
+                delivery = add + ',' + ci + ',' + st + ',' + co + '-' + str(pi)
                 order=orders(customer=ord.customer,quantity=ord.quantity,totalamt=ord.totalamt,
                              date=date.today(),delivery=delivery)
                 order.save()
