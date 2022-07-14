@@ -1,0 +1,354 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title> Product Detail</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+	  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+      <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+
+
+	  <style>
+		  body {
+  font-family: 'open sans';
+  overflow-x: hidden; }
+
+
+
+@-webkit-keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+@keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 70%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  color: black;
+  background-color: lavender;
+}
+
+
+.box {
+  max-width: 1824px;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 1200px) {
+  .box {
+    padding: 0 48px;
+  }
+}
+
+
+
+
+/* HEADER */
+.header{
+background-color: steelblue;
+}
+ .logob{
+ width: 100px;
+ height: 80px;
+ cursor: pointer;
+ }
+
+ nav{
+  width: 84%;
+  margin: auto;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+ }
+
+ nav ul li{
+     display: inline-block;
+     list-style: none;
+     margin: 10px 20px;
+ }
+
+ nav ul li a{
+     text-decoration: none;
+     color: white ;
+ }
+
+ nav ul li a:hover{
+     color: white;
+ }
+
+ .d {
+  display: flex;
+  align-items: center;
+}
+
+
+ .align-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ @media only screen and (max-width: 768px) {
+  nav {
+    padding: 16px 0;
+  }
+
+
+  .icons{
+    display: none;
+  }
+
+
+  .logob{
+    width: 100px;
+    height: 80px;
+    cursor: pointer;
+    }
+  }
+
+.card {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  background: #eee;
+  padding: 3em;
+  line-height: 1.5em; }
+
+
+
+.btn {
+  display: inline-block;
+  border-radius: 80px;
+  background-color: #ff4321;
+  padding: 20px 80px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 16px 24px rgba(0, 0, 0, 0.3);
+  margin-top: 75px;
+  margin-left: 600px;
+}
+
+
+
+
+/* Section */
+.section {
+  padding: 160px 0 0 0;
+}
+ /*footer*/
+    #footer {
+
+        box-sizing: border-box;
+        font-family: 'Poppins',sans-serif;
+        position: relative;
+        min-height: 50vh;
+        padding: 50px 100px;
+        background-color: steelblue;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+     }
+
+
+     #footer ul li{
+        color: white;
+        list-style:none;
+        margin: 30px 40px;
+        padding-top: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    #footer ul li a{
+        text-decoration: none;
+        color: white;
+        font-family: sans-serif;
+    }
+
+    #footer ul li a:hover{
+        color: #ff4321;
+    }
+
+
+
+
+	  </style>
+
+  </head>
+
+  <body>
+  <header class="header">
+  <nav>
+    <img src="{% static 'images/' %}logo.jpg"  class="logob">
+    <ul>
+        <li >
+            <a href="{% url 'homepage' %}">Home
+
+            </a>
+          </li>
+          <li >
+            <a  href="{% url 'MyAccount' %}" target="_blank">My Account</a>
+          </li>
+          <li >
+            <a  href="{% url 'products' %}" target="_blank">Products</a>
+          </li>
+          <li >
+            <a  href="{% url 'wallet' %}" target="_blank">Wallet</a>
+          </li>
+            <li >
+            <a href="{% url 'myorders' %}" target="_blank">My Orders</a>
+          </li>
+
+
+        </ul>
+
+        <!-- Right -->
+        <ul >
+
+          <li>
+            <a  href ="{% url 'cart' %}">
+               <span class="badge red z-depth-1 mr-1"> {{count}}</span>
+              <i class="fas fa-shopping-cart"></i>
+              <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+            </a>
+          </li>
+
+          <li >
+            <a href="{% url 'logout' %}" >
+              Log Out
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </ul>
+    </nav>
+
+
+  </header>
+
+	<div class="container">
+
+		<div class="card">
+
+			<div class="container-fliud">
+
+     <table class="table table-borderless">
+                    <h2>
+            <span class="w3-container">Your Orders</span>
+          </h2>
+             <thead>
+                  <tr>
+
+                <th>Product</th>
+                      <th>Brand</th>
+              <th>Price</th>
+                  <th>Quantity</th>
+                 <th>Total</th>
+                 <th>Date</th>
+                      <th>Delivery Address</th>
+                  </tr>
+             </thead>
+
+          <tbody>
+
+            {% for p in orders %}
+               {% for b in p.product.all %}
+            <tr>
+
+                <td>{{b.name}}</td>
+                <td>{{b.company}}</td>
+
+              <td>Rs. {{b.price}}</td>
+
+                 {% endfor %}
+
+                  <td>{{p.quantity}}</td>
+                 <td>Rs. {{p.totalamt}}</td>
+                 <td>{{p.date}}</td>
+                <td>{{p.delivery}}</td>
+            </tr>
+            {% endfor %}
+
+
+
+          </tbody>
+
+                </table>
+
+    </div>
+  </main>
+    {% for mes in messages %}
+    {{mes}}
+    {% endfor %}
+</div>
+                    </div>
+                </div>
+            </div>
+
+
+         </div>
+      </div>
+</form>
+      </div>
+
+
+
+        <section id="footer">
+
+            <div class="foot">
+                <ul>
+                    <li><a href="">HOME</a></li>
+                    <li><a href="">ABOUT US</a></li>
+                    <li><a href="">CONTACT US</a></li>
+
+                </ul>
+
+
+            </div>
+        </section>
+	</div>
+</body>
+
+</html>
